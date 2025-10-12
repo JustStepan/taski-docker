@@ -1,6 +1,7 @@
 # Дорожная карта: Развертывание Django-проектов на сервере
 
 ## Цель
+
 Научиться самостоятельно разворачивать Django-проекты на собственном сервере с использованием Docker, Nginx, Gunicorn и сопутствующих технологий.
 
 ---
@@ -8,6 +9,7 @@
 ## Этап 1: Основы Linux и работа с сервером (1-2 недели)
 
 ### Что изучить:
+
 - **Основы командной строки Linux**
   - Навигация: `cd`, `ls`, `pwd`
   - Работа с файлами: `cp`, `mv`, `rm`, `mkdir`, `touch`
@@ -29,6 +31,7 @@
   - Фоновые процессы: `&`, `nohup`, `screen`, `tmux`
 
 ### Практика:
+
 1. Арендовать VPS (Digital Ocean, Timeweb, Selectel)
 2. Подключиться по SSH
 3. Создать пользователя, настроить SSH-ключи
@@ -36,6 +39,7 @@
 5. Настроить firewall (ufw)
 
 ### Ресурсы:
+
 - [Linux Journey](https://linuxjourney.com/) - интерактивный курс
 - [DigitalOcean Tutorials](https://www.digitalocean.com/community/tutorials) - практические гайды
 
@@ -44,6 +48,7 @@
 ## Этап 2: Понимание веб-архитектуры (1 неделя)
 
 ### Что изучить:
+
 - **Как работает веб**
   - HTTP/HTTPS протоколы
   - Клиент-серверная архитектура
@@ -60,6 +65,7 @@
   - **PostgreSQL** - база данных
 
 ### Схема взаимодействия:
+
 ```
 Браузер → Nginx (порт 80/443)
            ↓
@@ -68,11 +74,13 @@
 ```
 
 ### Практика:
+
 1. Нарисовать схему своего проекта
 2. Понять, где хранится статика, где код Django
 3. Проследить путь запроса от браузера до БД
 
 ### Ресурсы:
+
 - [How the Web Works](https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web/How_the_Web_works)
 - Статья "Django Deployment for Beginners" на Medium
 
@@ -81,6 +89,7 @@
 ## Этап 3: Django локально (1-2 недели)
 
 ### Что изучить:
+
 - **Django settings**
   - `DEBUG`, `ALLOWED_HOSTS`, `SECRET_KEY`
   - `STATIC_URL`, `STATIC_ROOT`, `STATICFILES_DIRS`
@@ -96,6 +105,7 @@
   - Миграции: `makemigrations`, `migrate`
 
 ### Практика:
+
 1. Создать простой Django-проект
 2. Настроить `ALLOWED_HOSTS`, `STATIC_ROOT`
 3. Запустить с `DEBUG=False` локально
@@ -103,6 +113,7 @@
 5. Настроить PostgreSQL локально
 
 ### Ресурсы:
+
 - [Django Deployment Checklist](https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/)
 - Django documentation: Static files
 
@@ -111,6 +122,7 @@
 ## Этап 4: Docker основы (2 недели)
 
 ### Что изучить:
+
 - **Концепции Docker**
   - Образ (image) vs Контейнер (container)
   - Dockerfile - рецепт сборки образа
@@ -131,6 +143,7 @@
   - Оптимизация размера образа
 
 ### Практика:
+
 1. Установить Docker Desktop (Mac) / Docker Engine (Linux)
 2. Написать простой Dockerfile для Django-проекта
 3. Собрать образ, запустить контейнер
@@ -138,6 +151,7 @@
 5. Пробросить порты, примонтировать volumes
 
 ### Ресурсы:
+
 - [Docker for Beginners](https://docker-curriculum.com/)
 - [Play with Docker](https://labs.play-with-docker.com/) - интерактивная практика
 - Официальная документация Docker
@@ -147,6 +161,7 @@
 ## Этап 5: Docker Compose (1-2 недели)
 
 ### Что изучить:
+
 - **Зачем Docker Compose**
   - Управление несколькими контейнерами
   - Декларативная конфигурация (YAML)
@@ -167,6 +182,7 @@
   - `docker compose ps` - статус контейнеров
 
 ### Практика:
+
 1. Создать `docker-compose.yml` с Django + PostgreSQL
 2. Настроить volumes для БД (чтобы данные не терялись)
 3. Настроить networks (чтобы Django видел PostgreSQL)
@@ -174,6 +190,7 @@
 5. Выполнить миграции через `docker compose exec`
 
 ### Ресурсы:
+
 - [Docker Compose Documentation](https://docs.docker.com/compose/)
 - Курс на YouTube: "Docker Compose Tutorial"
 
@@ -182,6 +199,7 @@
 ## Этап 6: Nginx основы (1 неделя)
 
 ### Что изучить:
+
 - **Что такое Nginx**
   - Веб-сервер и reverse proxy
   - Когда использовать Nginx, а когда Gunicorn
@@ -194,6 +212,7 @@
   - `proxy_set_header` - передача заголовков
 
 - **Типичная схема для Django**
+
   ```
   location /static/ {
     alias /path/to/static/;  # Nginx раздает напрямую
@@ -205,6 +224,7 @@
   ```
 
 ### Практика:
+
 1. Установить Nginx локально
 2. Настроить простую раздачу статики
 3. Настроить proxy_pass к Django
@@ -212,6 +232,7 @@
 5. Добавить Nginx в docker-compose.yml
 
 ### Ресурсы:
+
 - [Nginx Beginner's Guide](http://nginx.org/en/docs/beginners_guide.html)
 - DigitalOcean: "Understanding Nginx Configuration"
 
@@ -220,6 +241,7 @@
 ## Этап 7: Полная сборка проекта в Docker (2 недели)
 
 ### Что изучить:
+
 - **Многоконтейнерная архитектура**
   - Backend (Django + Gunicorn)
   - Frontend (React/Vue сборка)
@@ -235,6 +257,7 @@
   - `docker-compose.production.yml` - для продакшена (image)
 
 ### Практика:
+
 1. Создать 4 Dockerfile: backend, frontend, gateway, db
 2. Настроить `docker-compose.yml` с volumes для статики
 3. Настроить Nginx внутри контейнера (gateway)
@@ -242,18 +265,19 @@
 5. Убедиться, что статика раздается корректно
 
 ### Текущая структура volumes:
+
 ```yaml
 volumes:
-  static:  # Общий том для статики
+  static: # Общий том для статики
 
 services:
   backend:
     volumes:
-      - static:/backend_static  # Backend пишет сюда
+      - static:/backend_static # Backend пишет сюда
 
   gateway:
     volumes:
-      - static:/staticfiles  # Nginx читает отсюда
+      - static:/staticfiles # Nginx читает отсюда
 ```
 
 ---
@@ -261,6 +285,7 @@ services:
 ## Этап 8: Docker Hub и CI/CD основы (1 неделя)
 
 ### Что изучить:
+
 - **Docker Registry**
   - Что такое Docker Hub
   - Push/pull образов
@@ -275,6 +300,7 @@ services:
   - Основы GitHub Actions (опционально)
 
 ### Практика:
+
 1. Создать аккаунт на Docker Hub
 2. Собрать образ для AMD64 с Mac:
    ```bash
@@ -284,6 +310,7 @@ services:
 4. Настроить версионирование (теги: latest, v1.0.0)
 
 ### Ресурсы:
+
 - Docker Hub Documentation
 - GitHub Actions: Docker Build and Push
 
@@ -292,6 +319,7 @@ services:
 ## Этап 9: Развертывание на сервере (2-3 недели)
 
 ### Что изучить:
+
 - **Подготовка сервера**
   - Установка Docker и Docker Compose
   - Настройка firewall (открыть 80, 443)
@@ -312,6 +340,7 @@ services:
   - Разделение трафика между проектами
 
 ### Практика:
+
 1. Настроить сервер: установить Docker
 2. Скопировать `docker-compose.production.yml` и `.env`
 3. Запустить: `docker compose -f docker-compose.production.yml up -d`
@@ -320,6 +349,7 @@ services:
 6. Проверить работу приложения по IP
 
 ### Типичные проблемы:
+
 - `ALLOWED_HOSTS` не настроен
 - Статика не раздается (volumes не смонтированы)
 - Nginx на хосте конфликтует с Nginx в Docker
@@ -330,6 +360,7 @@ services:
 ## Этап 10: HTTPS и домены (1 неделя)
 
 ### Что изучить:
+
 - **DNS**
   - A-записи (привязка домена к IP)
   - Покупка домена (Namecheap, reg.ru)
@@ -343,6 +374,7 @@ services:
   - Автоматическое обновление сертификатов
 
 ### Практика:
+
 1. Купить домен (или использовать бесплатный)
 2. Настроить A-запись на IP сервера
 3. Установить Certbot на сервер
@@ -353,6 +385,7 @@ services:
 5. Настроить автообновление сертификатов
 
 ### Ресурсы:
+
 - [Certbot Instructions](https://certbot.eff.org/)
 - DigitalOcean: "How To Secure Nginx with Let's Encrypt"
 
@@ -361,6 +394,7 @@ services:
 ## Этап 11: Мониторинг и отладка (1-2 недели)
 
 ### Что изучить:
+
 - **Логи**
   - `docker compose logs` - логи контейнеров
   - `sudo tail -f /var/log/nginx/error.log` - логи Nginx
@@ -378,6 +412,7 @@ services:
   - Простой мониторинг с Uptime Kuma (опционально)
 
 ### Практика:
+
 1. Намеренно сломать проект (убрать ALLOWED_HOSTS)
 2. Найти ошибку через логи
 3. Изучить типичные ошибки и их решения
@@ -388,6 +423,7 @@ services:
 ## Этап 12: Продвинутые темы (опционально, 2-4 недели)
 
 ### Темы для углубления:
+
 - **Оптимизация Docker**
   - Multi-stage builds
   - Кеширование слоев
@@ -418,45 +454,56 @@ services:
 ## План обучения (итого: 3-4 месяца)
 
 ### Неделя 1-2: Linux и SSH
+
 - Каждый день 1-2 часа работы с сервером
 - Практика: настройка VPS, базовые команды
 
 ### Неделя 3: Теория веб-архитектуры
+
 - Изучение схем, рисование диаграмм
 - Понимание роли каждого компонента
 
 ### Неделя 4-5: Django локально
+
 - Настройка settings для production
 - Работа со статикой и БД
 
 ### Неделя 6-7: Docker основы
+
 - Ежедневная практика с контейнерами
 - Написание Dockerfile
 
 ### Неделя 8-9: Docker Compose
+
 - Оркестрация нескольких контейнеров
 - Volumes и networks
 
 ### Неделя 10: Nginx
+
 - Изучение конфигов
 - Практика с proxy_pass
 
 ### Неделя 11-12: Полная сборка в Docker
+
 - Интеграция всех компонентов
 - Тестирование локально
 
 ### Неделя 13: Docker Hub
+
 - Публикация образов
 - Кросс-платформенная сборка
 
 ### Неделя 14-16: Развертывание на сервере
+
 - Первый полноценный деплой
 - Решение проблем
 
 ### Неделя 17: HTTPS
+
 - Настройка домена и SSL
 
 ### Неделя 18-19: Отладка и мониторинг
+
 - Изучение логов
 - Автоматизация
 
@@ -467,20 +514,24 @@ services:
 ## Полезные ресурсы
 
 ### Документация:
+
 - [Django Deployment](https://docs.djangoproject.com/en/4.2/howto/deployment/)
 - [Docker Documentation](https://docs.docker.com/)
 - [Nginx Documentation](http://nginx.org/en/docs/)
 
 ### Курсы:
+
 - Яндекс.Практикум (ваш текущий курс)
 - Docker Mastery на Udemy
 - Linux Academy
 
 ### Книги:
+
 - "Docker Deep Dive" - Nigel Poulton
 - "Two Scoops of Django" - глава про deployment
 
 ### Сообщества:
+
 - Docker Community Forums
 - Django Forum
 - Stack Overflow
