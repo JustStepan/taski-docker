@@ -158,45 +158,36 @@ jobs:
     deploy:
         runs-on: ubuntu-latest
         needs:
-            # Дождёмся билда всех образов Taski
             - build_and_push_to_docker_hub
             - build_frontend_and_push_to_docker_hub
             - build_gateway_and_push_to_docker_hub
         steps:
             - name: Checkout repo
               uses: actions/checkout@v3
-            # Копируем docker-compose.production.yml на продакшен-сервер
-            - name: Copy docker-compose.yml via ssh
-              uses: appleboy/scp-action@master
-              # Передаём параметры для action appleboy/scp-action:
-              with:
-                  host: ${{ secrets.HOST }}
-                  username: ${{ secrets.USER }}
-                  key: ${{ secrets.SSH_KEY }}
-                  passphrase: ${{ secrets.SSH_PASSPHRASE }}
-                  source: "docker-compose.production.yml"
-                  target: "taski"
-            - name: Executing remote ssh commands to deploy
-              uses: appleboy/ssh-action@master
-              with:
-                  host: ${{ secrets.HOST }}
-                  username: ${{ secrets.USER }}
-                  key: ${{ secrets.SSH_KEY }}
-                  passphrase: ${{ secrets.SSH_PASSPHRASE }}
-                  # Параметр script передаёт в action appleboy/ssh-action команды,
-                  # которые нужно выполнить на сервере,
-                  # с которым установлено соединение
-                  script: |
-                      cd taski
-                      # Выполняет pull образов с Docker Hub
-                      sudo docker compose -f docker-compose.production.yml pull
-                      # Перезапускает все контейнеры в Docker Compose
-                      sudo docker compose -f docker-compose.production.yml down
-                      sudo docker compose -f docker-compose.production.yml up -d
-                      # Выполняет миграции и сбор статики
-                      sudo docker compose -f docker-compose.production.yml exec backend python manage.py migrate
-                      sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic
-                      sudo docker compose -f docker-compose.production.yml exec backend cp -r /app/collected_static/. /backend_static/static/
+
+            - name: Setup SSH and deploy
+              run: |
+                  mkdir -p ~/.ssh
+                  echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+                  chmod 600 ~/.ssh/id_rsa
+                  ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
+
+                  # Копируем файл
+                  scp -i ~/.ssh/id_rsa \
+                    docker-compose.production.yml \
+                    ${{ secrets.USER }}@${{ secrets.HOST }}:taski/
+
+                  # Выполняем команды на сервере
+                  ssh -i ~/.ssh/id_rsa \
+                    ${{ secrets.USER }}@${{ secrets.HOST }} << 'EOF'
+                  cd taski
+                  sudo docker compose -f docker-compose.production.yml pull
+                  sudo docker compose -f docker-compose.production.yml down
+                  sudo docker compose -f docker-compose.production.yml up -d
+                  sudo docker compose -f docker-compose.production.yml exec backend python manage.py migrate
+                  sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic
+                  sudo docker compose -f docker-compose.production.yml exec backend cp -r /app/collected_static/. /backend_static/static/
+                  EOF
 
     send_message:
         runs-on: ubuntu-latest
